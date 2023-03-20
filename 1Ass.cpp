@@ -58,7 +58,7 @@ void printTree(node *root, int space) {
 int main() {
 	node *root = NULL;
 	root = CreateTree();
-
+	
 	preorderTraversalwithoutrecursion(root);
 
 	/* 
