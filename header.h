@@ -19,19 +19,7 @@ node *createNode(int data) {
 	return p;
 }
 
-node *Insert(node *root, int data) {
-	if (root == NULL)
-	{
-		root = createNode(data);
-		root->Level = MaxLevel;
-		return root;
-	}
-	else {
-		if (data > root->data) root->right = Insert(root->right, data);
-		else root->left = Insert(root->left, data);
-	}
-	return root;
-}
+node *Insert(node *root, int data);
 
 void PreorderDFSTraversal(node *root) {
     if (root == NULL) return;
@@ -165,10 +153,18 @@ void LevelOrderTraversal(node *root) {
     }  
 }
 
-node *SearchData(node *root, int data);
+node* SearchNode(node *root, int data);
 
 void listLeafNodes(node *root);
 
 void listNonLeafNodes(node *root);
 
 void printLevelofNodes(node *root);
+
+node *FindParent(node *root, node *child) {
+    node *temp = root;
+    if ((temp->left)->data == child->data || (temp->right)->data == child->data) return temp;
+    
+    if (temp->data < child->data) temp = FindParent(temp->right, child);
+    else temp = FindParent(temp->left, child);
+}
