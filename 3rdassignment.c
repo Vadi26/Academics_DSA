@@ -79,23 +79,42 @@ void inorder_traversal(node *root) {
     inorder_traversal(root->right);
 }
 
+node *FindParent(node *root, node *child) {
+    node *temp = root;
+    if ((temp->left)->character == child->character || (temp->right)->character == child->character) return temp;
+    
+    if (temp->character < child->character) temp = FindParent(temp->right, child);
+    else temp = FindParent(temp->left, child);
+}
+
 node *postfix_to_Btree(node *root) {
     if (root == NULL) {
         root = createNode(TOP->symbol);
         pop();
     }
-    node *p = NULL;
+    node *p = root;
+    node *latest = NULL;
     while(!isEmpty()) {
-        if ((TOP->symbol == 42) || (TOP->symbol == 43) || (TOP->symbol == 45) || (TOP->symbol == 47)) {
-            root->left = createNode(TOP->symbol);
-            p = root->left;
+        while ((TOP->symbol == 42) || (TOP->symbol == 43) || (TOP->symbol == 45) || (TOP->symbol == 47)) {
+            p->left = createNode(TOP->symbol);
+            p = p->left;
+            latest = p;
             pop();
         }
-        else {
-            root->right = createNode(TOP->symbol);
+        node *temp = NULL;
+        while ((TOP->symbol != 42) && (TOP->symbol != 43) && (TOP->symbol != 45) && (TOP->symbol != 47)) {
+            if((latest->left == NULL) && (latest->right == NULL)) {
+                latest->left = createNode(TOP->symbol);
+                pop();
+                latest->right = createNode(TOP->symbol);
+                pop();
+                continue;
+            }
+            temp = FindParent(p, latest);
+            temp->right = createNode(TOP->symbol);
             pop();
         }
-        p = postfix_to_Btree(p);
+        latest = FindParent(p, latest);
     }
     return root;
 }
