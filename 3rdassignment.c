@@ -8,24 +8,24 @@ typedef struct node {
 }node;
 
 typedef struct stack_element {
-    char symbol;
+    node *tree_node;
     struct stack_element *next;
 }stack_element;
 
 stack_element *TOP = NULL;
 
-void *createStackelement(char symbol) {
+void *createStackelement(node *tree_node) {
     stack_element *p = NULL;
     p = (stack_element *)malloc(sizeof(stack_element));
-    p->symbol = symbol;
+    p->tree_node = tree_node;
     p->next = NULL;
 
     return p;
 }
 
-void push(char character) {
+void push(node *tree_node) {
     stack_element *p = NULL;
-    p = createStackelement(character);
+    p = createStackelement(tree_node);
     if (TOP == NULL) TOP = p;
     else {
         p->next = TOP;
@@ -33,10 +33,10 @@ void push(char character) {
     }
 }
 
-void pop() {
+node *pop() {
     stack_element *temp = TOP;
     TOP = TOP->next;
-    free(temp);
+    return temp->tree_node;
 }
 
 node *createNode(char c) {
@@ -47,19 +47,11 @@ node *createNode(char c) {
     return p;
 }
 
-void array_to_stack(char arr[], int size) {
-    node *ptr = NULL;
-    for (int i = 0; i < size; i++)
-    {
-        push(arr[i]);
-    }
-}
-
 void printStack() {
     stack_element *p = NULL;
     p = TOP;
     while(p != NULL) {
-        printf("%c \n", p->symbol);
+        printf("%c \n", (p->tree_node)->character);
         p = p->next;
     }
 }
@@ -87,44 +79,53 @@ node *FindParent(node *root, node *child) {
     else temp = FindParent(temp->left, child);
 }
 
-node *postfix_to_Btree(node *root) {
-    if (root == NULL) {
-        root = createNode(TOP->symbol);
-        pop();
-    }
-    node *p = root;
-    node *latest = NULL;
-    while(!isEmpty()) {
-        while ((TOP->symbol == 42) || (TOP->symbol == 43) || (TOP->symbol == 45) || (TOP->symbol == 47)) {
-            p->left = createNode(TOP->symbol);
-            p = p->left;
-            latest = p;
-            pop();
+node *postfix_to_Btree(node *root, char character_array[], int size) {
+    int i = 0;
+    for (i = 0; i < size; i++) {
+        char token = character_array[i];
+        if(token >= '0' && token <= '9') {
+            node *ptr = createNode(token);
+            push(ptr);
         }
-        node *temp = NULL;
-        while ((TOP->symbol != 42) && (TOP->symbol != 43) && (TOP->symbol != 45) && (TOP->symbol != 47)) {
-            if((latest->left == NULL) && (latest->right == NULL)) {
-                latest->left = createNode(TOP->symbol);
-                pop();
-                latest->right = createNode(TOP->symbol);
-                pop();
-                continue;
-            }
-            temp = FindParent(p, latest);
-            temp->right = createNode(TOP->symbol);
-            pop();
+        else {
+            node *ptr = createNode(token);
+            ptr->right = pop();
+            ptr->left = pop();
+            push(ptr);
         }
-        latest = FindParent(p, latest);
     }
+    root = pop();
     return root;
 }
 
+int eval(node *root) {
+    if (root == NULL) {
+        return 0;
+    }
+
+    if (root->left == NULL && root->right == NULL) {
+        return root->character - '0';
+    }
+
+    int left = eval(root->left);
+    int right = eval(root->right);
+
+    switch (root->character) {
+        case '+': return left + right;
+        case '-': return left - right;
+        case '*': return left * right;
+        case '/': return left / right;
+        case '%': return left % right;
+        default: return 0;
+    }
+}
+
 int main() {
-    char character[7] = {'3','4','+','2','*','7','/'};
-    array_to_stack(character, 7);
+    char character[7] = {'4','5','2','7','+','-','*'};
     node *root = NULL;
-    root = postfix_to_Btree(root);
+    root = postfix_to_Btree(root, character, 7);
     inorder_traversal(root);
+    printf("\n  %d    \n", eval(root));
 
     return 0;
 }
