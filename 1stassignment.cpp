@@ -27,50 +27,25 @@ int findData(int arr[], int data) {
     return i;
 }
 
-// node *formBT(node *root, int inorder[], int preorder[], int i_left_index, int i_right_index, int p_left_index, int p_right_index) {
-//     if(p_left_index == 0) root = createNode(preorder[p_left_index]);
-    
-//     if(i_left_index == i_right_index){
-//         root = createNode(preorder[p_left_index]);
-//         return root;
-//     }
-
-//     while(p_left_index <= p_right_index) {
-//         int i = findData(inorder, preorder[p_left_index], 5);
-//         root->left = formBT(root->left, inorder, preorder, 0, i, p_left_index++, p_right_index);
-//         p_left_index++;
-//         root->right = formBT(root->right, inorder, preorder, i + 1, 5 - i, p_left_index, p_right_index);
-//         p_left_index++;
-//     }
-
-//     return root;
-// }
-
-node* buildTree(int preorder[], int inorder[], int start, int end, int *preIndex) {
-    if (start > end) {
+node* formBT(int preorder[], int inorder[], int inorder_start, int inorder_end, int preorder_Index) {
+    if (inorder_start > inorder_end) {
         return NULL;
     }
 
-    node* newNode = createNode(preorder[*preIndex]);
+    node* newNode = createNode(preorder[preorder_Index]);
 
-    (*preIndex)++;
+    preorder_Index++;
 
-    if (start == end) {
+    if (inorder_start == inorder_end) {
         return newNode;
     }
 
     int inIndex = findData(inorder, newNode->data);
 
-    newNode->left = buildTree(preorder, inorder, start, inIndex - 1, preIndex);
-    newNode->right = buildTree(preorder, inorder, inIndex + 1, end, preIndex);
+    newNode->left = formBT(preorder, inorder, inorder_start, inIndex - 1, preorder_Index);
+    newNode->right = formBT (preorder, inorder, inIndex + 1, inorder_end, preorder_Index);
 
     return newNode;
-}
-
-// Function to construct a binary tree from its preorder and inorder traversals
-node* buildTreeFromTraversal(int preorder[], int inorder[], int size) {
-    int preIndex = 0;
-    return buildTree(preorder, inorder, 0, size - 1, &preIndex);
 }
 
 void inorder_traversal(node *root) {
@@ -92,7 +67,7 @@ int main() {
     int i_curr = i_left_index;
     int p_left_index = 0, p_right_index = sizeof(preorder)/sizeof(preorder[0]) - 1;
 
-    root = buildTreeFromTraversal(preorder, inorder, size);
+    root = formBT(preorder, inorder, 0, size - 1, 0);
     inorder_traversal(root);
 
     return 0;

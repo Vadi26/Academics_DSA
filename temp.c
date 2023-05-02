@@ -54,8 +54,7 @@ node* ExpressionTree(char postfix[], int length) {
     return pop(&stack);
 }
 
-// Function to evaluate the expression tree
-int evaluate(node *root) {
+int eval(node *root) {
     if (root == NULL) {
         return 0;
     }
@@ -87,13 +86,13 @@ void inorder_traversal(node *root) {
 
 // Main function
 int main() {
-    char postfix[] = {'4', '5', '7', '2', '+', '-', '*'};
+    char postfix[] = {'3','4','+','2','*','7','/'};
     int length = strlen(postfix);
 
     node *root = ExpressionTree(postfix, length);
     inorder_traversal(root);
 
-    printf("\n The result is %d\n", evaluate(root));
+    printf("\n The result is %d\n", eval(root));
 
     return 0;
 }
