@@ -32,8 +32,7 @@ node *findMin(node *root) {
 	node *p = NULL;
 	p = root;
 	while (p->left != NULL) p = p->left;
-	// cout << p->data << " ";
-	// printf(" %d \n", p->data);
+
 	return p;
 }
 
@@ -142,7 +141,7 @@ void displayStack() {
 void preorderTraversalwithoutrecursion(node *root);
 
 void LevelOrderTraversal(node *root) {
-	if(root == NULL) return;
+	if(root == NULL) return;        free(node_to_be_deleted);
     Enqueue(root);
     while (!isEmpty())
     {
