@@ -48,6 +48,27 @@ node* formBT(int preorder[], int inorder[], int inorder_start, int inorder_end, 
     return newNode;
 }
 
+node* formBT_post(int postorder[], int inorder[], int inorder_start, int inorder_end, int postorder_index) {
+    if (inorder_start > inorder_end) {
+        return NULL;
+    }
+
+    node* newNode = createNode(postorder[postorder_index]);
+
+    postorder_index++;
+
+    if (inorder_start == inorder_end) {
+        return newNode;
+    }
+
+    int inIndex = findData(inorder, newNode->data);
+
+    newNode->right = formBT (postorder, inorder, inIndex + 1, inorder_end, postorder_index);
+    newNode->left = formBT(postorder, inorder, inorder_start, inIndex - 1, postorder_index);
+
+    return newNode;
+}
+
 void inorder_traversal(node *root) {
     node *p = root;
     if(p == NULL) return;
@@ -58,17 +79,17 @@ void inorder_traversal(node *root) {
 
 int main() {
     node *root = NULL;
-    // int inorder[] = {9,3,15,20,7};
-    // int preorder[] = {3,9,20,15,7};
-    int inorder[] = {-1};
-    int preorder[] = {-1};
+    int inorder[] = {9,3,15,20,7};
+    int preorder[] = {3,9,20,15,7};
+    // int inorder[] = {-1};
+    // int preorder[] = {-1};
     int size = sizeof(preorder) / sizeof(int);
     int i_left_index = 0, i_right_index = sizeof(inorder)/sizeof(inorder[0]) - 1;
     int i_curr = i_left_index;
     int p_left_index = 0, p_right_index = sizeof(preorder)/sizeof(preorder[0]) - 1;
 
-    root = formBT(preorder, inorder, 0, size - 1, 0);
-    inorder_traversal(root);
+    root = formBT_post(preorder, inorder, 0, size - 1, size - 1);
+    inorder_traversal(root); 
 
     return 0;
 }

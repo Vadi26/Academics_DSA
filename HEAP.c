@@ -39,7 +39,7 @@ void swap(int *a, int *b) {
 node *HEAPIFY(node *root) {
     int current_index = root->latest_index - 1;
     int parent_index = (current_index - 1)/2;
-    while ((root->tree[current_index] > root->tree[parent_index]) && parent_index >= 0) {
+    while ((root->tree[current_index] < root->tree[parent_index]) && parent_index >= 0) {
         swap(&root->tree[current_index], &root->tree[parent_index]);
         current_index = parent_index;
         parent_index = (parent_index - 1)/2;
@@ -70,10 +70,10 @@ void heapify(int arr[], int n, int index) {
     int left = 2 * index + 1;
     int right = 2 * index + 2;
 
-    if (left < n && arr[left] > arr[largest])
+    if (left < n && arr[left] < arr[largest])
         largest = left;
 
-    if (right < n && arr[right] > arr[largest])
+    if (right < n && arr[right] < arr[largest])
         largest = right;
 
     if (largest != index) {
@@ -111,9 +111,10 @@ int main() {
     insert(root, 20);
     insert(root, 15);
     insert(root, 60);
+    insert(root, 70);
     display_heap(root);
 
-    heapSort(root->tree, 8);
+    heapSort(root->tree, 9);
     printf("\n");
     display_heap(root);
 

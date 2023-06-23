@@ -141,7 +141,7 @@ void displayStack() {
 void preorderTraversalwithoutrecursion(node *root);
 
 void LevelOrderTraversal(node *root) {
-	if(root == NULL) return;        free(node_to_be_deleted);
+	if(root == NULL) return;
     Enqueue(root);
     while (!isEmpty())
     {
@@ -166,4 +166,6 @@ node *FindParent(node *root, node *child) {
     
     if (temp->data < child->data) temp = FindParent(temp->right, child);
     else temp = FindParent(temp->left, child);
+
+    return temp;
 }

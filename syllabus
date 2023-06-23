@@ -1,1 +1,9 @@
-Only AVL, Heap and RedBlack tree
+Red-black ka code nahiye
+
+Sparse matrix mein polynomial evaluation nahi ayega
+
+In graphs, only BFS, DFS, prims, kruskals and shortest path will be there. Topological sorting nahi hai. 
+
+One Theoretical question is expected on expression tree. 
+
+Mam advised to read time complexities of each and every algorithm and data structure
